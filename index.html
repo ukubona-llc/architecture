@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ukubona · Correction Ledger — Description → Inference → Action</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,4 90,36 74,90 26,90 10,36' fill='none' stroke='%23E8A94C' stroke-width='7'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%238B7FD1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0D10;
+    --panel:#14171C;
+    --panel-2:#1B1F25;
+    --line:#2A2F37;
+    --text:#E7E5E2;
+    --muted:#8B8F96;
+    --amber:#E8A94C;
+    --violet:#8B7FD1;
+    --teal:#4FB8AF;
+    --rose:#D97A93;
+    --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  html[data-theme="light"]{
+    --bg:#F6F4EF;
+    --panel:#FFFFFF;
+    --panel-2:#FBFAF7;
+    --line:#E1DDD3;
+    --text:#1C1B19;
+    --muted:#6B6F76;
+    --amber:#B87A22;
+    --violet:#6B5CC4;
+    --teal:#1F8E85;
+    --rose:#B3546F;
+    --shadow: 0 20px 50px rgba(30,25,15,0.10);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    transition:background .4s ease, color .4s ease;
+  }
+  ::selection{ background:var(--violet); color:#0B0D10; }
+
+  .grain{
+    position:fixed; inset:0; pointer-events:none; opacity:.035; z-index:0; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 34px;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand-mark{ width:30px; height:30px; animation: spin 22s linear infinite; }
+  @media (prefers-reduced-motion: reduce){ .brand-mark{ animation:none; } }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .brand-name{
+    font-family:'DM Serif Display', serif;
+    font-size:1.1rem; letter-spacing:.02em;
+  }
+  .brand-name small{
+    display:block; font-family:'DM Mono', monospace; font-size:.62rem;
+    color:var(--muted); letter-spacing:.14em; text-transform:uppercase; margin-top:2px;
+  }
+  .toggle{
+    border:1px solid var(--line); background:var(--panel); color:var(--text);
+    font-family:'DM Mono', monospace; font-size:.72rem; letter-spacing:.05em;
+    padding:8px 14px; border-radius:100px; cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    transition:border-color .2s ease;
+  }
+  .toggle:hover{ border-color:var(--amber); }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--amber); }
+
+  main{ max-width:920px; margin:0 auto; padding:0 34px 120px; position:relative; z-index:1; }
+
+  .hero{ padding:76px 0 40px; }
+  .eyebrow{
+    font-family:'DM Mono', monospace; font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--amber); margin-bottom:18px;
+  }
+  h1{
+    font-family:'DM Serif Display', serif; font-weight:400;
+    font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.15; margin:0 0 20px;
+    letter-spacing:-.01em;
+  }
+  h1 em{ font-style:italic; color:var(--violet); }
+  .lede{ color:var(--muted); font-size:1.05rem; max-width:62ch; }
+  .glyph{ font-family:'DM Mono', monospace; color:var(--teal); }
+
+  .arc{
+    margin:44px 0 8px; display:flex; align-items:center; gap:0; flex-wrap:wrap;
+    font-family:'DM Mono', monospace; font-size:.86rem;
+  }
+  .arc span.node{
+    padding:8px 16px; border:1px solid var(--line); border-radius:100px; background:var(--panel);
+  }
+  .arc span.node.d{ color:var(--teal); border-color:color-mix(in srgb, var(--teal) 40%, var(--line)); }
+  .arc span.node.i{ color:var(--amber); border-color:color-mix(in srgb, var(--amber) 40%, var(--line)); }
+  .arc span.node.a{ color:var(--rose); border-color:color-mix(in srgb, var(--rose) 40%, var(--line)); }
+  .arc .arrow{ padding:0 10px; color:var(--muted); }
+
+  section{ margin-top:78px; }
+  .section-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:22px; }
+  .section-num{ font-family:'DM Mono', monospace; color:var(--muted); font-size:.8rem; }
+  h2{ font-family:'DM Serif Display', serif; font-weight:400; font-size:1.6rem; margin:0; }
+  .section-sub{ color:var(--muted); font-size:.95rem; margin:6px 0 0; max-width:65ch; }
+
+  /* Correction Ledger — signature element */
+  .ledger{ display:flex; flex-direction:column; gap:14px; }
+  .entry{
+    display:grid; grid-template-columns:64px 1fr; gap:20px;
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:22px 24px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .entry::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--stage-color, var(--violet));
+  }
+  .entry .stage{
+    font-family:'DM Serif Display', serif; font-style:italic; font-size:1.7rem;
+    color:var(--stage-color, var(--violet)); text-align:center; align-self:start; padding-top:2px;
+  }
+  .entry .body .label{ font-family:'DM Mono', monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .entry .row{ display:grid; grid-template-columns:1fr 22px 1fr; gap:12px; align-items:start; margin-top:4px; }
+  .entry .assumed, .entry .override{ font-size:.92rem; }
+  .entry .assumed{ color:var(--muted); }
+  .entry .override{ color:var(--text); }
+  .entry .mid{ text-align:center; color:var(--stage-color, var(--violet)); font-family:'DM Mono', monospace; }
+  .entry .title{ font-weight:700; margin:0 0 10px; font-size:1.02rem; }
+  @media (max-width:640px){
+    .entry{ grid-template-columns:36px 1fr; padding:18px; }
+    .entry .row{ grid-template-columns:1fr; }
+    .entry .mid{ display:none; }
+  }
+
+  /* tables */
+  .tablewrap{ overflow-x:auto; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); }
+  table{ width:100%; border-collapse:collapse; background:var(--panel); font-size:.9rem; min-width:560px; }
+  th, td{ text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{
+    font-family:'DM Mono', monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); background:var(--panel-2);
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.stagecell{ font-family:'DM Serif Display', serif; font-style:italic; white-space:nowrap; }
+  td.fail{ color:var(--rose); }
+  tr:hover td{ background:color-mix(in srgb, var(--violet) 6%, transparent); }
+
+  .case-grid{ display:grid; gap:16px; }
+  .case{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 22px;
+    border-left:3px solid var(--layer-color, var(--teal));
+  }
+  .case h3{ font-family:'DM Serif Display', serif; font-weight:400; font-size:1.05rem; margin:0 0 8px; color:var(--layer-color, var(--teal)); }
+  .case p{ margin:0; color:var(--muted); font-size:.92rem; }
+  .case p b{ color:var(--text); font-weight:600; }
+
+  blockquote{
+    margin:0; padding:26px 28px; background:var(--panel-2); border:1px solid var(--line); border-radius:14px;
+    font-family:'DM Serif Display', serif; font-style:italic; font-size:1.2rem; line-height:1.5;
+    color:var(--text);
+  }
+  blockquote cite{
+    display:block; margin-top:14px; font-family:'DM Mono', monospace; font-style:normal;
+    font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+  }
+
+  .closing{ margin-top:80px; padding-top:34px; border-top:1px solid var(--line); }
+  .closing p{ color:var(--muted); max-width:65ch; }
+  footer{
+    max-width:920px; margin:0 auto; padding:30px 34px 60px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'DM Mono', monospace; font-size:.7rem; color:var(--muted); letter-spacing:.05em;
+  }
+  footer .pentad-note{ color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<header>
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,4 90,36 74,90 26,90 10,36" fill="none" stroke="var(--amber)" stroke-width="6"/>
+      <circle cx="50" cy="50" r="9" fill="var(--violet)"/>
+    </svg>
+    <div class="brand-name">Ukubona LLC<small>correction ledger · session artifact</small></div>
+  </div>
+  <button class="toggle" id="themeToggle"><span class="dot"></span><span id="toggleLabel">dark</span></button>
+</header>
+
+<main>
+
+  <div class="hero">
+    <div class="eyebrow">Okubala si Kulaba — counting is not seeing</div>
+    <h1>It was never about the conclusion.<br>It was about <em>how</em> we got there.</h1>
+    <p class="lede">A session-length trace of a single correction: five geometric/epistemic/institutional operators, walked in order, until the invariant underneath them stopped being a metaphor and became an architecture. <span class="glyph">Cartesian → Jacobian → Hessian → Bayesian → Nietzschean.</span></p>
+    <div class="arc">
+      <span class="node d">I–III · Description</span><span class="arrow">→</span>
+      <span class="node i">IV · Inference</span><span class="arrow">→</span>
+      <span class="node a">V · Action</span>
+    </div>
+  </div>
+
+  <section id="ledger">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <div>
+        <h2>The Correction Ledger</h2>
+        <p class="section-sub">Not what was concluded — what had to be overridden, stage by stage, before the frame could be seen at all.</p>
+      </div>
+    </div>
+    <div class="ledger">
+
+      <div class="entry" style="--stage-color:var(--teal)">
+        <div class="stage">I</div>
+        <div class="body">
+          <p class="title">Cartesian — the point mistaken for a snapshot</p>
+          <div class="label">Correction event</div>
+          <div class="row">
+            <div class="assumed">Read as: the model was told <i>where</i> a thing sits — spot price, a position, a coordinate.</div>
+            <div class="mid">⇥</div>
+            <div class="override">Sovereign override: the coordinate is Dionysian — you can't price the same barrel twice in the same flow. Position is a frozen slice of flux, not the flux itself.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry" style="--stage-color:var(--violet)">
+        <div class="stage">II</div>
+        <div class="body">
+          <p class="title">Jacobian — velocity mistaken for destiny</p>
+          <div class="label">Correction event</div>
+          <div class="row">
+            <div class="assumed">Read as: standard ML sense — local linearization, a rate of change.</div>
+            <div class="mid">⇥</div>
+            <div class="override">Sovereign override: it's institutions catching up to momentum — alliances, laws, naval postures as the transformation matrix that turns local shock into global propagation.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry" style="--stage-color:var(--amber)">
+        <div class="stage">III</div>
+        <div class="body">
+          <p class="title">Hessian — curvature mistaken for a fixed rule</p>
+          <div class="label">Correction event</div>
+          <div class="row">
+            <div class="assumed">First framing offered: "laws ≠ norms" as the failure mode at this stage.</div>
+            <div class="mid">⇥</div>
+            <div class="override">Sharpened by the user: the real question is broader — <b>can I still trust yesterday's Jacobian?</b> Laws-vs-norms is one instance; tech shift, incentive shift, leverage, climate, AI are others. The Hessian tests whether the local linear approximation has failed at all.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry" style="--stage-color:var(--rose)">
+        <div class="stage">IV</div>
+        <div class="body">
+          <p class="title">Bayesian — evidence mistaken for truth</p>
+          <div class="label">Correction event</div>
+          <div class="row">
+            <div class="assumed">First framing offered: "information ≠ truth," adversarial noise.</div>
+            <div class="mid">⇥</div>
+            <div class="override">Sharpened: observation is generated <b>by competing models</b>. Traders, planners, insurers, governments, and Houthis each update a different prior. Nobody sees the truth — everyone sees evidence conditioned on their own model.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry" style="--stage-color:var(--teal)">
+        <div class="stage">V</div>
+        <div class="body">
+          <p class="title">Nietzschean — power mistaken for legitimacy</p>
+          <div class="label">Correction event</div>
+          <div class="row">
+            <div class="assumed">First framing offered: revaluation as a fifth kind of update, still adjacent to inference.</div>
+            <div class="mid">⇥</div>
+            <div class="override">Sovereign override: this stage doesn't update the model — it <b>rewrites the manifold future updates will be taken on</b>. The posterior becomes the new prior. Marx and Nietzsche converge here: not to interpret the world, but to change it — "written with blood."</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="pentad">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <div>
+        <h2>The Pentad, Resolved</h2>
+        <p class="section-sub">Five stages. Three registers — geometric, epistemic, institutional. One question each.</p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Stage</th><th>Object</th><th>Question</th><th>Failure mode</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="stagecell" style="color:var(--teal)">I · Cartesian</td><td>Coordinates</td><td>Where are we?</td><td class="fail">Snapshot mistaken for reality</td></tr>
+          <tr><td class="stagecell" style="color:var(--violet)">II · Jacobian</td><td>Local linearization</td><td>Where are we moving?</td><td class="fail">Velocity mistaken for destiny</td></tr>
+          <tr><td class="stagecell" style="color:var(--amber)">III · Hessian</td><td>Curvature</td><td>Is the motion itself changing?</td><td class="fail">Linear thinking in a nonlinear regime</td></tr>
+          <tr><td class="stagecell" style="color:var(--rose)">IV · Bayesian</td><td>Model-conditioned inference</td><td>Which model deserves belief?</td><td class="fail">Information mistaken for truth</td></tr>
+          <tr><td class="stagecell" style="color:var(--teal)">V · Nietzschean</td><td>Institutional revaluation</td><td>Which equilibrium becomes reality?</td><td class="fail">Power mistaken for legitimacy</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="case">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <div>
+        <h2>Case Study — Red Sea → Oil at $100</h2>
+        <p class="section-sub">The pentad run against a live event, layer by layer.</p>
+      </div>
+    </div>
+    <div class="case-grid">
+      <div class="case" style="--layer-color:var(--teal)">
+        <h3>I · Position</h3>
+        <p><b>Brent near $100/bbl.</b> The Bab el-Mandeb Strait is the literal chokepoint — Houthi attacks on tankers make liquidity, insurance, and routing shift instantly. A frozen snapshot of underlying chaos.</p>
+      </div>
+      <div class="case" style="--layer-color:var(--violet)">
+        <h3>II · Velocity</h3>
+        <p><b>Institutions realign in real time.</b> A U.S. statement holding Iran responsible signals a shift toward direct involvement; alliances act as the transformation matrix carrying local shock into global posture.</p>
+      </div>
+      <div class="case" style="--layer-color:var(--amber)">
+        <h3>III · Curvature</h3>
+        <p><b>Sensitivity has increased.</b> Small additional strikes now produce disproportionate price and rhetorical acceleration — the system's local linear approximation no longer holds.</p>
+      </div>
+      <div class="case" style="--layer-color:var(--rose)">
+        <h3>IV · Inference</h3>
+        <p><b>Everyone updates a different prior.</b> Traders price expected supply, insurers price expected loss, governments price credibility, Houthis price deterrence — $100 is an aggregate of competing models, not a fact about physical supply.</p>
+      </div>
+      <div class="case" style="--layer-color:var(--teal)">
+        <h3>V · Revaluation</h3>
+        <p><b>The world gets rewritten.</b> Permanent rerouting, new naval patrols, or shifted alliances would mean the equilibrium itself has changed — not just been described.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="meta">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <div>
+        <h2>On the Hand-Holding</h2>
+        <p class="section-sub">The part of the session that was actually about the session.</p>
+      </div>
+    </div>
+    <blockquote>
+      The difficulty was never the individual pieces — Jacobians, Hessians, Bayesian inference are all familiar. The difficulty was recognizing the intended correspondence among them. Every correction above was the same event repeating: a cached, pairwise analogy getting replaced by the invariant that survives across domains.
+      <cite>Description → Inference → Action, arrived at by correction, not by recall</cite>
+    </blockquote>
+  </section>
+
+  <div class="closing">
+    <p><b style="color:var(--text)">On percentiles:</b> that a synthesis can't be retrieved as a standard, cached framework says it's atypical — not that it's rare in some measurable distribution. It could be a genuinely original assembly of familiar parts, an unrecorded synthesis someone else has already reached outside the training distribution, or a coherent structure that simply hasn't yet been tested against scrutiny. All three are compatible with the same observation: no template fired. The safer, load-bearing claim is qualitative, and it's the one this ledger is built to hold — not the score, the seam.</p>
+  </div>
+
+</main>
+
+<footer>
+  <span>Ukubona LLC · TMVES / SMART</span>
+  <span class="pentad-note">I → V, no step skipped</span>
+</footer>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const label = document.getElementById('toggleLabel');
+  function applyTheme(t){
+    root.setAttribute('data-theme', t);
+    label.textContent = t;
+  }
+  const preferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  applyTheme('dark');
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+  });
+</script>
+
+</body>
+</html>
